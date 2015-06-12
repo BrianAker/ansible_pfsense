@@ -1,0 +1,3 @@
+.ansible
+public_keys
+aux/ansible/pip.txt

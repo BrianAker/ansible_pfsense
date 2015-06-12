@@ -1,0 +1,16 @@
+---
+- name: Install Python
+  hosts: pfsense
+  gather_facts: no
+  tasks:
+    - name: bootstrap pkg
+      raw: env ASSUME_ALWAYS_YES=YES pkg bootstrap -f
+    - name: bootstrap python
+      raw: env ASSUME_ALWAYS_YES=YES pkg install python
+
+- name: Install Packages
+  hosts: pfsense
+  gather_facts: yes
+  tasks:
+    - name: check connection
+      raw: pfSsh.php playback installpkg "Open-VM-Tools"
