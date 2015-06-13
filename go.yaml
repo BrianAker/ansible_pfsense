@@ -16,13 +16,27 @@
       raw: pfSsh.php playback installpkg "Open-VM-Tools"
       when: ansible_system_vendor == 'VMware, Inc.'
 
+    - name: Installing sudo
+      raw: pfSsh.php playback installpkg "sudo"
+
     - name: Accept Intel Licensing
       lineinfile: dest=/boot/loader.conf.local state=present legal.intel_ipw.license_ack=1
-      lineinfile: dest=/boot/loader.conf.local
-                  state=present
-                  create=yes
-                  regexp='^#?{{ item.key }}'
-                  line='{{ item.key }}={{ item.value }}'
+      lineinfile:
+          dest: /boot/loader.conf.local
+          state: present
+          create: yes
+          regexp: '^#?{{ item.key }}'
+          line: '{{ item.key }}={{ item.value }}'
       with_items:
         - { key: 'legal.intel_ipw.license_ack', value: '1'}
         - { key: 'legal.intel_iwi.license_ack', value: '1'}
+
+- name: Firewall Setup
+  hosts: firewall_appliance
+  gather_facts: yes
+  tasks:
+    - name: Installing pfBlockerNG
+      raw: 'pfSsh.php playback installpkg "{{ item }}"'
+      with_items:
+        - pfBlockerNG
+        - snort
